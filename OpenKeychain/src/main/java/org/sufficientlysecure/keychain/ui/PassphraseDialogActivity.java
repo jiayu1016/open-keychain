@@ -255,6 +255,10 @@ public class PassphraseDialogActivity extends FragmentActivity {
                         mSecretKeyToUnlock = canonicalizedKeyRing.getSecretKey(subKeyId);
                         mainUserId = canonicalizedKeyRing.getPrimaryUserIdWithFallback();
 
+                        if(mSecretKeyToUnlock.isDummy()) {
+                            finishCaching(null);
+                        }
+
                     } else {
                         // use db
                         ProviderHelper helper = new ProviderHelper(activity);
@@ -479,7 +483,7 @@ public class PassphraseDialogActivity extends FragmentActivity {
                             super.onPostExecute(result);
 
                             // if we were cancelled in the meantime, the result isn't relevant anymore
-                            if (mIsCancelled) {
+                            if (mIsCancelled | getActivity() == null) {
                                 return;
                             }
 

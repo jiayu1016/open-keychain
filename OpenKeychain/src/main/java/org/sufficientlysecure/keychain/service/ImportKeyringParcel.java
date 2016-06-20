@@ -51,7 +51,7 @@ public class ImportKeyringParcel implements Parcelable {
             mKeyList = new ArrayList<>();
             in.readList(mKeyList, ParcelableKeyRing.class.getClassLoader());
         } else {
-            mKeyList = null;
+            mKeyringPassphrasesList = new ArrayList<>();
             in.readList(mKeyringPassphrasesList, KeyringPassphrases.class.getClassLoader());
         }
         mKeyserver = in.readString();

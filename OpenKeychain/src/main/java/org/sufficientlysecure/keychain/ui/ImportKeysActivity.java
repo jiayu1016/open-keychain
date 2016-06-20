@@ -412,6 +412,7 @@ public class ImportKeysActivity extends BaseActivity
                         subKeyInfos.add(new SubKeyInfo(uKeyRing.getMasterKeyId(),
                                                         publicKey.getKeyId(),
                                                         pKeyRing));
+
                     }
                 }
             } catch (IOException | PgpGeneralException e) {
@@ -457,10 +458,6 @@ public class ImportKeysActivity extends BaseActivity
 
         Intent intent = new Intent(this, PassphraseDialogActivity.class);
 
-        // try empty passphrase to handle stripped keys
-        // TODO: This makes importing slower than desired, but not as slow as checking keytype. Any alternatives?
-        intent.putExtra(PassphraseDialogActivity.EXTRA_PASSPHRASE_TO_TRY, new Passphrase());
-
         // try using last entered passphrase if appropriate
         if (!mPassphrasesList.isEmpty()) {
             KeyringPassphrases prevKeyring = mPassphrasesList.get(mPassphrasesList.size() - 1);
@@ -498,17 +495,20 @@ public class ImportKeysActivity extends BaseActivity
                 long subKeyId = requiredParcel.getSubKeyId();
                 Passphrase passphrase = cryptoParcel.getPassphrase();
 
-                // save passphrase
-                boolean isNewKeyRing = (mPassphrasesList.isEmpty() ||
-                        mPassphrasesList.get(mPassphrasesList.size() - 1).mMasterKeyId != masterKeyId);
+                // save passphrase if one is returned
+                // could be stripped or diverted to card otherwise
+                if(passphrase != null) {
+                     boolean isNewKeyRing = (mPassphrasesList.isEmpty() ||
+                            mPassphrasesList.get(mPassphrasesList.size() - 1).mMasterKeyId != masterKeyId);
 
-                if (isNewKeyRing) {
-                    KeyringPassphrases newKeyring = new KeyringPassphrases(masterKeyId);
-                    newKeyring.mSubkeyPassphrases.put(subKeyId, passphrase);
-                    mPassphrasesList.add(newKeyring);
-                } else {
-                    KeyringPassphrases prevKeyring = mPassphrasesList.get(mPassphrasesList.size() - 1);
-                    prevKeyring.mSubkeyPassphrases.put(subKeyId, passphrase);
+                    if (isNewKeyRing) {
+                        KeyringPassphrases newKeyring = new KeyringPassphrases(masterKeyId);
+                        newKeyring.mSubkeyPassphrases.put(subKeyId, passphrase);
+                        mPassphrasesList.add(newKeyring);
+                    } else {
+                        KeyringPassphrases prevKeyring = mPassphrasesList.get(mPassphrasesList.size() - 1);
+                        prevKeyring.mSubkeyPassphrases.put(subKeyId, passphrase);
+                    }
                 }
 
                 // check next subkey
