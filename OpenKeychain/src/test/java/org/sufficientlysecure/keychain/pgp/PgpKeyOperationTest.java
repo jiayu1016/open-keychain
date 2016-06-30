@@ -1246,9 +1246,7 @@ public class PgpKeyOperationTest {
         // set-up KeyringPassphrases without master key
         KeyringPassphrases keyringPassphrases = new KeyringPassphrases(masterKeyId);
         HashMap<Long, Passphrase> subkeyPassphrases = keyringPassphrases.mSubkeyPassphrases;
-        Iterator<CanonicalizedSecretKey> iterator = cskr.secretKeyIterator().iterator();
-        while(iterator.hasNext()) {
-            CanonicalizedSecretKey secretKey = iterator.next();
+        for (CanonicalizedSecretKey secretKey : cskr.secretKeyIterator()) {
             if(secretKey.getKeyId() != masterKeyId) {
                 subkeyPassphrases.put(secretKey.getKeyId(), nonEmptyPassphrase);
             }
@@ -1262,9 +1260,7 @@ public class PgpKeyOperationTest {
         {
             UncachedKeyRing modified = result.getRing();
             cskr = (CanonicalizedSecretKeyRing) modified.canonicalize(new OperationLog(), 0);
-            Iterator<CanonicalizedSecretKey> keyIterator = cskr.secretKeyIterator().iterator();
-            while(keyIterator.hasNext()) {
-                CanonicalizedSecretKey secretKey = keyIterator.next();
+            for (CanonicalizedSecretKey secretKey : cskr.secretKeyIterator()) {
                 try {
                     boolean unlocked = secretKey.unlock(new Passphrase());
                     if (secretKey.getKeyId() != masterKeyId && !unlocked) {
@@ -1288,9 +1284,7 @@ public class PgpKeyOperationTest {
         {
             UncachedKeyRing modified = result.getRing();
             cskr = (CanonicalizedSecretKeyRing) modified.canonicalize(new OperationLog(), 0);
-            Iterator<CanonicalizedSecretKey> keyIterator = cskr.secretKeyIterator().iterator();
-            while(keyIterator.hasNext()) {
-                CanonicalizedSecretKey secretKey = keyIterator.next();
+            for (CanonicalizedSecretKey secretKey : cskr.secretKeyIterator()) {
                 try {
                     boolean unlocked = secretKey.unlock(new Passphrase());
                     if(!unlocked) {

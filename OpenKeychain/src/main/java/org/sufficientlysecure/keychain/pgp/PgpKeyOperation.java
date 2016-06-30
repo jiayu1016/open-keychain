@@ -1335,11 +1335,6 @@ public class PgpKeyOperation {
             OperationLog log, int indent) throws PGPException {
         boolean keysModified = false;
 
-        PBESecretKeyEncryptor emptyEncryptor = new JcePBESecretKeyEncryptorBuilder(
-                SymmetricKeyAlgorithmTags.NULL, null,
-                PgpSecurityConstants.SECRET_KEY_ENCRYPTOR_S2K_COUNT)
-                .setProvider(Constants.BOUNCY_CASTLE_PROVIDER_NAME).build(null);
-
         for (PGPSecretKey sKey : new IterableIterator<>(sKR.getSecretKeys())) {
             log.add(LogType.MSG_MF_PASSPHRASE_KEY, indent,
                     KeyFormattingUtils.convertKeyIdToHex(sKey.getKeyID()));
@@ -1351,7 +1346,7 @@ public class PgpKeyOperation {
                     PBESecretKeyDecryptor emptyDecryptor =
                             new JcePBESecretKeyDecryptorBuilder().setProvider(
                                     Constants.BOUNCY_CASTLE_PROVIDER_NAME).build("".toCharArray());
-                    sKey = PGPSecretKey.copyWithNewPassword(sKey, emptyDecryptor, emptyEncryptor);
+                    sKey = PGPSecretKey.copyWithNewPassword(sKey, emptyDecryptor, null);
                 } catch (PGPException e) {
                     log.add(LogType.MSG_MF_PASSPHRASE_MISSING, indent+1);
                     continue;
@@ -1361,7 +1356,7 @@ public class PgpKeyOperation {
                 PBESecretKeyDecryptor keyDecryptor = new JcePBESecretKeyDecryptorBuilder().setProvider(
                         Constants.BOUNCY_CASTLE_PROVIDER_NAME).build(passphrase.getCharArray());
                 try {
-                    sKey = PGPSecretKey.copyWithNewPassword(sKey, keyDecryptor, emptyEncryptor);
+                    sKey = PGPSecretKey.copyWithNewPassword(sKey, keyDecryptor, null);
                 } catch (PGPException e) {
                     log.add(LogType.MSG_MF_ERROR_PASSPHRASE_SUBKEY, indent+1);
                     continue;

@@ -804,17 +804,17 @@ public class ProviderHelper {
             int result = SaveKeyringResult.SAVED_SECRET;
 
             byte[] keyData;
-            try {
-                keyData = keyRing.getEncoded();
-            } catch (IOException e) {
-                Log.e(Constants.TAG, "Failed to encode key!", e);
-                log(LogType.MSG_IS_ERROR_IO_EXC);
-                return SaveKeyringResult.RESULT_ERROR;
-            }
 
-            // re-encrypt keyring
-            if(!skipReEncryption) {
-
+            // skip re-encryption for certain tests
+            if (skipReEncryption) {
+                try {
+                    keyData = keyRing.getEncoded();
+                } catch (IOException e) {
+                    Log.e(Constants.TAG, "Failed to encode key!", e);
+                    log(LogType.MSG_IS_ERROR_IO_EXC);
+                    return SaveKeyringResult.RESULT_ERROR;
+                }
+            } else {
                 // remove s2k encryption on individual keys
                 PgpKeyOperation op = new PgpKeyOperation(null);
                 PgpEditKeyResult editResult = op.removeKeyRingPassphrases(keyRing, passphrases);
@@ -826,7 +826,7 @@ public class ProviderHelper {
                 keyRing = (CanonicalizedSecretKeyRing) editResult.getRing().canonicalize(mLog, mIndent);
 
                 // get passphrase for keyring block encryption, or use empty passphrase if no obvious one exists
-                Passphrase passphrase = new Passphrase();
+                Passphrase passphrase = passphrases.mNewKeyringPassphrase;
                 for (CanonicalizedSecretKey key: keyRing.secretKeyIterator()) {
                     Passphrase current = passphrases.mSubkeyPassphrases.get(key.getKeyId());
                     if(current != null && !current.isEmpty()) {
@@ -837,8 +837,8 @@ public class ProviderHelper {
 
                 // encrypt secret keyring block
                 try {
-                    keyData = ByteArrayEncryptor.encryptByteArray(keyData, passphrase.getCharArray());
-                } catch (EncryptDecryptException e) {
+                    keyData = ByteArrayEncryptor.encryptByteArray(keyRing.getEncoded(), passphrase.getCharArray());
+                } catch (EncryptDecryptException | IOException e) {
                     Log.e(Constants.TAG, "Encryption went wrong.", e);
                     log(LogType.MSG_IS_ERROR_IO_ENCRYPT);
                     return SaveKeyringResult.RESULT_ERROR;

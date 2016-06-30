@@ -11,16 +11,28 @@ public class KeyringPassphrases implements Parcelable {
 
     public final long mMasterKeyId;
     public final HashMap<Long, Passphrase> mSubkeyPassphrases;
+    public final Passphrase mNewKeyringPassphrase;
 
+    // default new passphrase is an empty one
     public KeyringPassphrases(long masterKeyId) {
         mMasterKeyId = masterKeyId;
         mSubkeyPassphrases = new HashMap<>();
+        mNewKeyringPassphrase = new Passphrase();
+    }
+
+    public KeyringPassphrases(long masterKeyId, Passphrase newKeyringPassphrase) {
+        if (newKeyringPassphrase == null) {
+            throw new IllegalArgumentException("newKeyringPassphrase cannot be null!");
+        }
+        mMasterKeyId = masterKeyId;
+        mSubkeyPassphrases = new HashMap<>();
+        mNewKeyringPassphrase = newKeyringPassphrase;
     }
 
     /**
-     * Returns a passphrase, with no guarantees on consistency
+     * Returns a subkey passphrase, with no guarantees on consistency
      */
-    public Passphrase getSinglePassphrase() {
+    public Passphrase getSingleSubkeyPassphrase() {
         if (mSubkeyPassphrases.size() > 0) {
             return mSubkeyPassphrases.values().iterator().next();
         } else {
@@ -70,11 +82,13 @@ public class KeyringPassphrases implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeLong(mMasterKeyId);
+        parcel.writeParcelable(mNewKeyringPassphrase, flags);
         parcel.writeParcelable(toParcelableHashMap(mSubkeyPassphrases), flags);
     }
 
     private KeyringPassphrases(Parcel source) {
         mMasterKeyId = source.readLong();
+        mNewKeyringPassphrase = source.readParcelable(Passphrase.class.getClassLoader());
         ParcelableHashMap<ParcelableLong, Passphrase> parcelableHashMap =
                 source.readParcelable(ParcelableHashMap.class.getClassLoader());
         mSubkeyPassphrases = fromParcelableHashMap(parcelableHashMap);
