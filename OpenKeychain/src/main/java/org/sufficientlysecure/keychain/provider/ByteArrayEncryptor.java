@@ -32,6 +32,11 @@ public final class ByteArrayEncryptor {
     public static byte[] encryptByteArray(byte[] keyData, char[] passphrase)
             throws EncryptDecryptException{
         try {
+            // handle empty passphrase
+            if (passphrase.length == 0) {
+                return new EncryptedData(keyData, new byte[0], new byte[0]).toBytes();
+            }
+
             keyData = keyData.clone();
             SecureRandom random = new SecureRandom();
 
@@ -73,6 +78,15 @@ public final class ByteArrayEncryptor {
         try {
             storedData = storedData.clone();
             EncryptedData encryptedData = EncryptedData.fromBytes(storedData);
+
+            // handle empty passphrase
+            if (encryptedData.mIv.length == 0 && encryptedData.mSalt.length == 0) {
+                if (passphrase.length == 0) {
+                    return encryptedData.mBytes;
+                } else {
+                    throw new IncorrectPassphraseException();
+                }
+            }
 
             SecretKey key = derivePbkfd2Key(encryptedData.mSalt, passphrase);
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
