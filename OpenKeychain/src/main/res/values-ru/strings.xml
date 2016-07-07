@@ -1189,7 +1189,7 @@
   <string name="msg_pse_error_no_passphrase">Пароль не предусмотрен!</string>
   <string name="msg_pse_error_pgp">Внутренняя ошибка OpenPGP!</string>
   <string name="msg_pse_error_sig">Обнаружена исключительная ситуация  подписи OpenPGP!</string>
-  <string name="msg_pse_error_unlock">Неизвестная ошибка разблокировения ключа!</string>
+  <string name="msg_pse_error_unlock_subkey">Неизвестная ошибка разблокировения ключа!</string>
   <string name="msg_pse_key_ok">Шифрование для ключа: %s</string>
   <string name="msg_pse_key_unknown">Отсутствует ключ для шифрования: %s</string>
   <string name="msg_pse_key_warn">Некорректный ключ для шифрования: %s</string>

@@ -1163,7 +1163,7 @@
   <string name="msg_pse_error_no_passphrase">Aucun mot de passe fourni !</string>
   <string name="msg_pse_error_pgp">Erreur interne OpenPGP !</string>
   <string name="msg_pse_error_sig">Une exception de signature OpenPGP a été rencontrée !</string>
-  <string name="msg_pse_error_unlock">Erreur inconnue de déverrouillage de la clef !</string>
+  <string name="msg_pse_error_unlock_subkey">Erreur inconnue de déverrouillage de la clef !</string>
   <string name="msg_pse_key_ok">Chiffrement pour la clef : %s</string>
   <string name="msg_pse_key_unknown">Clef manquante pour le chiffrement : %s</string>
   <string name="msg_pse_key_warn">Clef erronée pour le chiffrement : %s</string>

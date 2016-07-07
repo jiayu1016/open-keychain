@@ -1147,7 +1147,7 @@
   <string name="msg_pse_error_no_passphrase">パスワードが提供されてない!</string>
   <string name="msg_pse_error_pgp">OpenPGP内部エラー!</string>
   <string name="msg_pse_error_sig">OpenPGP署名例外に当たりました!</string>
-  <string name="msg_pse_error_unlock">鍵のロック解除で不明なエラー!</string>
+  <string name="msg_pse_error_unlock_subkey">鍵のロック解除で不明なエラー!</string>
   <string name="msg_pse_key_ok">暗号化の鍵: %s</string>
   <string name="msg_pse_key_unknown">暗号化の鍵を紛失: %s</string>
   <string name="msg_pse_key_warn">暗号化に問題のある鍵: %s</string>

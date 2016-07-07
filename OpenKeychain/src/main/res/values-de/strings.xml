@@ -1163,7 +1163,7 @@
   <string name="msg_pse_error_no_passphrase">Kein Passwort angegeben!</string>
   <string name="msg_pse_error_pgp">Interner OpenPGP-Fehler!</string>
   <string name="msg_pse_error_sig">Es ist ein OpenPGP-Signatur-Ausnahmefehler aufgetreten!</string>
-  <string name="msg_pse_error_unlock">Unbekannter Fehler beim Entsperren des Schlüssels!</string>
+  <string name="msg_pse_error_unlock_subkey">Unbekannter Fehler beim Entsperren des Schlüssels!</string>
   <string name="msg_pse_key_ok">Verschlüssele für Schlüssel: %s</string>
   <string name="msg_pse_key_unknown">Fehlender Schlüssel für Verschlüsselung: %s</string>
   <string name="msg_pse_key_warn">Fehlerhafter Schlüssel für Verschlüsselung: %s</string>

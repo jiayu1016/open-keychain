@@ -1077,7 +1077,7 @@
   <string name="msg_pse_error_no_passphrase">Ez da sarhitzik eman!</string>
   <string name="msg_pse_error_pgp">Barneko OpenPGP akatsa!</string>
   <string name="msg_pse_error_sig">OpenPGP sinadura salbuespena aurkitu da!</string>
-  <string name="msg_pse_error_unlock">Akats ezezaguna giltza desblokeatzerakoan!</string>
+  <string name="msg_pse_error_unlock_subkey">Akats ezezaguna giltza desblokeatzerakoan!</string>
   <string name="msg_pse_key_ok">Enkriptatzen giltzarako: %s</string>
   <string name="msg_pse_key_unknown">Ez dago enkriptaketarako giltza: %s</string>
   <string name="msg_pse_key_warn">Giltza gaitza enkriptaketarako: %s</string>

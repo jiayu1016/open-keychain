@@ -955,7 +955,7 @@
   <string name="msg_pse_error_no_passphrase">Geen wachtwoord opgegeven!</string>
   <string name="msg_pse_error_pgp">Interne OpenPGP-fout!</string>
   <string name="msg_pse_error_sig">OpenPGP-ondertekeningsuitzondering tegengekomen!</string>
-  <string name="msg_pse_error_unlock">Onbekende fout bij ontgrendelen van sleutel!</string>
+  <string name="msg_pse_error_unlock_subkey">Onbekende fout bij ontgrendelen van sleutel!</string>
   <string name="msg_pse_key_ok">Bezig met versleutelen voor sleutel: %s</string>
   <string name="msg_pse_key_unknown">Ontbrekende sleutel voor versleuteling: %s</string>
   <string name="msg_pse_key_warn">Slechte sleutel voor versleuteling: %s</string>

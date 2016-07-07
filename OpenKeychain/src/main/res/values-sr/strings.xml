@@ -1151,7 +1151,7 @@
   <string name="msg_pse_error_no_passphrase">Лозинка није дата!</string>
   <string name="msg_pse_error_pgp">Унутрашња ОпенПГП грешка!</string>
   <string name="msg_pse_error_sig">Наиђох на изузетак ОпенПГП потписивања!</string>
-  <string name="msg_pse_error_unlock">Непозната грешка откључавања кључа!</string>
+  <string name="msg_pse_error_unlock_subkey">Непозната грешка откључавања кључа!</string>
   <string name="msg_pse_key_ok">Шифрујем за кључ: %s</string>
   <string name="msg_pse_key_unknown">Недостаје кључ за шифровање: %s</string>
   <string name="msg_pse_key_warn">Лош кључ за шифровање: %s</string>
