@@ -67,6 +67,7 @@ import nordpol.android.TagDispatcher;
 public abstract class BaseSecurityTokenActivity extends BaseActivity
         implements OnDiscoveredTagListener, UsbConnectionDispatcher.OnDiscoveredUsbDeviceListener {
     public static final int REQUEST_CODE_PIN = 1;
+    public static final int REQUEST_CODE_KEYRING_PASSPHRASE = 2;
 
     public static final String EXTRA_TAG_HANDLING_ENABLED = "tag_handling_enabled";
 
@@ -389,19 +390,26 @@ public abstract class BaseSecurityTokenActivity extends BaseActivity
         mNfcTagDispatcher.enableExclusiveNfc();
     }
 
-    protected void obtainSecurityTokenPin(RequiredInputParcel requiredInput) {
+    protected void obtainSecurityTokenPin(RequiredInputParcel requiredInput, Passphrase keyringPassphrase) {
 
         try {
-            Passphrase passphrase = PassphraseCacheService.getCachedSubkeyPassphrase(this,
+            Passphrase pinPassphrase = PassphraseCacheService.getCachedSubkeyPassphrase(this,
                     requiredInput.getMasterKeyId(), requiredInput.getSubKeyId());
-            if (passphrase != null) {
-                mSecurityTokenHelper.setPin(passphrase);
+            if (pinPassphrase != null) {
+                mSecurityTokenHelper.setPin(pinPassphrase);
                 return;
+            }
+
+            if (keyringPassphrase == null) {
+                Intent intent = new Intent(this, PassphraseDialogActivity.class);
+                intent.putExtra(PassphraseDialogActivity.EXTRA_REQUIRED_INPUT,
+                        RequiredInputParcel.createRequiredKeyringPassphrase(requiredInput));
+                startActivityForResult(intent, REQUEST_CODE_KEYRING_PASSPHRASE);
             }
 
             Intent intent = new Intent(this, PassphraseDialogActivity.class);
             intent.putExtra(PassphraseDialogActivity.EXTRA_REQUIRED_INPUT,
-                    RequiredInputParcel.createRequiredSubkeyPassphrase(requiredInput));
+                    RequiredInputParcel.createRequiredSubkeyPassphrase(requiredInput, keyringPassphrase));
             startActivityForResult(intent, REQUEST_CODE_PIN);
         } catch (PassphraseCacheService.KeyNotFoundException e) {
             throw new AssertionError(
@@ -422,6 +430,16 @@ public abstract class BaseSecurityTokenActivity extends BaseActivity
                 CryptoInputParcel input = data.getParcelableExtra(PassphraseDialogActivity.RESULT_CRYPTO_INPUT);
                 mSecurityTokenHelper.setPin(input.getPassphrase());
                 break;
+            }
+            case REQUEST_CODE_KEYRING_PASSPHRASE: {
+                if (resultCode != Activity.RESULT_OK) {
+                    setResult(resultCode);
+                    finish();
+                    return;
+                }
+                CryptoInputParcel cryptoInput = data.getParcelableExtra(PassphraseDialogActivity.RESULT_CRYPTO_INPUT);
+                RequiredInputParcel requiredInput = data.getParcelableExtra(PassphraseDialogActivity.EXTRA_REQUIRED_INPUT);
+                obtainSecurityTokenPin(requiredInput, cryptoInput.getPassphrase());
             }
             default:
                 super.onActivityResult(requestCode, resultCode, data);

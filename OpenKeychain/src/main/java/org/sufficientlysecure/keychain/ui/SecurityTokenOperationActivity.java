@@ -141,8 +141,14 @@ public class SecurityTokenOperationActivity extends BaseSecurityTokenActivity {
         // obtain passphrase for this subkey
         if (mRequiredInput.mType != RequiredInputParcel.RequiredInputType.SECURITY_TOKEN_MOVE_KEY_TO_CARD
                 && mRequiredInput.mType != RequiredInputParcel.RequiredInputType.SECURITY_TOKEN_RESET_CARD) {
-            obtainSecurityTokenPin(mRequiredInput);
-            checkPinAvailability();
+            try {
+                Passphrase keyringPassphrase = PassphraseCacheService.getCachedPassphrase(this, mRequiredInput.getMasterKeyId());
+                obtainSecurityTokenPin(mRequiredInput, keyringPassphrase);
+                checkPinAvailability();
+            } catch (PassphraseCacheService.KeyNotFoundException e) {
+                throw new AssertionError(
+                        "tried to find passphrase for non-existing key. this is a programming error!");
+            }
         } else {
             checkDeviceConnection();
         }
