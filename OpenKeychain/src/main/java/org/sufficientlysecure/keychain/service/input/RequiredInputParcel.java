@@ -187,7 +187,7 @@ public class RequiredInputParcel implements Parcelable {
 
     public static RequiredInputParcel createRequiredKeyringPassphrase(long masterKeyId) {
         return new RequiredInputParcel(RequiredInputType.PASSPHRASE_KEYRING_UNLOCK,
-                null, null, null, masterKeyId, null, null, null);
+                null, null, null, masterKeyId, masterKeyId, null, null);
     }
 
     public static RequiredInputParcel createRequiredKeyringPassphrase(RequiredInputParcel req) {
